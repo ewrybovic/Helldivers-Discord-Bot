@@ -25,15 +25,6 @@ def GetCurrentMO() -> Assignment2:
         else:
             return None
 
-def GetMostRecentDispatchs(previousIndex: int) -> []:
-    dispatch: Dispatch
-
-    with Client(base_url="https://helldivers-2-dotnet.fly.dev/") as client:
-        data = get_api_v1_dispatches_all.sync(client=client)
-
-        if data is not None:
-            print(data)
-
 def GetCurrentDispatch() -> Dispatch:
     dispatch: Dispatch
 

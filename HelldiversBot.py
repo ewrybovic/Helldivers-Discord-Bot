@@ -6,15 +6,14 @@ from dotenv import load_dotenv
 from API import APIWrapper
 from discord.ext import commands, tasks
 
-# Using a private debug channel to avoid spam
-DEBUG = True
-
 #load the discord token
 load_dotenv()
+DEBUG = bool(os.getenv('DEBUG'))
 TOKEN = os.getenv('DISCORD_TOKEN')
 CHANNEL = int(os.getenv('POND_CHANNEL'))
 
 if DEBUG:
+    print("Using Debug Channel")
     CHANNEL = int(os.getenv('DEBUG_CHANNEL'))
 
 # TODO make this a database that holds the IDs(currently MO and Dispatch IDs)
@@ -57,12 +56,14 @@ async def loop():
     await bot.wait_until_ready()
     channel = bot.get_channel(CHANNEL)
 
+    # Check if new Major Order
     majorOrder = APIWrapper.GetCurrentMO()
-    
     if HelperFunctions.check_new_order(majorOrder, currentMOID):
         print("New major order")
         await channel.send(HelperFunctions.format_major_order(majorOrder))
     else:
         print("same major order")
+    
+    # Check if new dispatch
 
 bot.run(TOKEN)

@@ -154,3 +154,6 @@ cython_debug/
 
 # Bot data
 majorOrder.txt
+
+# Sqlite data
+*.sqlite3

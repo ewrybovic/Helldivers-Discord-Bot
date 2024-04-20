@@ -6,11 +6,18 @@ from dotenv import load_dotenv
 from API import APIWrapper
 from discord.ext import commands, tasks
 
+# Using a private debug channel to avoid spam
+DEBUG = True
+
 #load the discord token
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 CHANNEL = int(os.getenv('POND_CHANNEL'))
 
+if DEBUG:
+    CHANNEL = int(os.getenv('DEBUG_CHANNEL'))
+
+# TODO make this a database that holds the IDs(currently MO and Dispatch IDs)
 # Open/Create file that holds major order id
 currentMOID = 0
 with open('majorOrder.txt', 'r+') as f:
@@ -37,6 +44,11 @@ async def on_ready():
 async def mo_command(ctx):
     majorOrder = APIWrapper.GetCurrentMO()
     await ctx.send(HelperFunctions.format_major_order(majorOrder))
+
+@bot.command(name="Dispatch", help="Gets the current dispatch from Super Earth")
+async def dispatch_command(ctx):
+    dispatch = APIWrapper.GetCurrentDispatch()
+    await ctx.send(HelperFunctions.format_dispatch(dispatch))
 
 @tasks.loop(minutes=5)
 async def loop():

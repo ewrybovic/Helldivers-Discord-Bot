@@ -1,9 +1,9 @@
 import os
 import discord
+import HelperFunctions
 
 from dotenv import load_dotenv
-from API import CurrentMO
-from API.helldivers_2_client.models import Assignment2
+from API import APIWrapper
 from discord.ext import commands, tasks
 
 #load the discord token
@@ -13,7 +13,7 @@ CHANNEL = int(os.getenv('POND_CHANNEL'))
 
 # Open/Create file that holds major order id
 currentMOID = 0
-with open('majorOrder.txt', 'a+') as f:
+with open('majorOrder.txt', 'r+') as f:
     line = f.read()
     if line:
         currentMOID = int(line)
@@ -28,22 +28,6 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-# TODO move these funcitons to a helper class
-def format_post(MO: Assignment2) -> str:
-    return f'Brief: {MO.briefing}\nDescription: {MO.description}\nExpiration: {MO.expiration.strftime("%H:%M:%S %d-%b-%Y")}\nProgress: {MO.progress}'
-
-def check_new_order(MO: Assignment2) -> bool:
-    global currentMOID
-    if currentMOID != MO.id:
-        # Wrtie new mo id
-        with open('majorOrder.txt', 'w') as f:
-            f.write(str(MO.id))
-        
-        currentMOID = MO.id
-        return True
-    else:
-        return False
-
 @bot.event
 async def on_ready():
     print(f'{bot.user} has connected to discord')
@@ -51,19 +35,21 @@ async def on_ready():
 
 @bot.command(name="MO", help="Gets the current Major Order")
 async def mo_command(ctx):
-    majorOrder = CurrentMO.GetCurrentMO()
-    await ctx.send(format_post(majorOrder))
+    majorOrder = APIWrapper.GetCurrentMO()
+    await ctx.send(HelperFunctions.format_major_order(majorOrder))
 
 @tasks.loop(minutes=5)
 async def loop():
+    global currentMOID
+
     await bot.wait_until_ready()
     channel = bot.get_channel(CHANNEL)
 
-    majorOrder = CurrentMO.GetCurrentMO()
+    majorOrder = APIWrapper.GetCurrentMO()
     
-    if check_new_order(majorOrder):
+    if HelperFunctions.check_new_order(majorOrder, currentMOID):
         print("New major order")
-        await channel.send(format_post(majorOrder))
+        await channel.send(HelperFunctions.format_major_order(majorOrder))
     else:
         print("same major order")
 

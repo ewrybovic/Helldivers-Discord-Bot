@@ -9,5 +9,17 @@ def GetCurrentMO() -> Assignment2:
     CurrentMO: Assignment2
 
     with client as client:
-        CurrentMO: Assignment2 = get_api_v1_assignments_all.sync( client=client)
+        data: Assignment2 = get_api_v1_assignments_all.sync( client=client)
+
+        if data is not None:
+            CurrentMO = data[0]
+
+        print(f'Breifing: {CurrentMO.briefing}')
+        print(f'Description: {CurrentMO.description}')
+        print(f'Expiration: {CurrentMO.expiration}')
+        print(f'Progress: {CurrentMO.progress}')
+
         return CurrentMO
+    
+if __name__ == '__main__':
+    GetCurrentMO()

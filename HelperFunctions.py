@@ -17,16 +17,5 @@ def format_dispatch(dispatch: Dispatch) -> str:
 def format_time(time) -> str:
     return time.strftime("%H:%M:%S %d-%b-%Y")
 
-def check_new_order(MO: Assignment2, currentMOID: int) -> bool:
-    if currentMOID != MO.id:
-        # Wrtie new mo id
-        with open('majorOrder.txt', 'w') as f:
-            f.write(str(MO.id))
-        
-        currentMOID = MO.id
-        return True
-    else:
-        return False
-
 def clean_markups(string: str) -> str:
     return re.sub(CLEANR, '', string)

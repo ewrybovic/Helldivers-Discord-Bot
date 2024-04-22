@@ -22,6 +22,7 @@ def GetCurrentMO() -> Assignment2:
 
             print(f'Breifing: {CurrentMO.briefing}')
             print(f'Description: {CurrentMO.description}')
+            print(f'Rewards: {CurrentMO.reward.amount} {CurrentMO.reward.type}')
             print(f'Expiration: {CurrentMO.expiration}')
             print(f'Progress: {CurrentMO.progress}')
 

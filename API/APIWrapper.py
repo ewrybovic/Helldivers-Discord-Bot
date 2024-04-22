@@ -5,12 +5,16 @@ from .helldivers_2_client.models import Dispatch
 from .helldivers_2_client.api.v1 import get_api_v1_assignments_all
 from .helldivers_2_client.api.v1 import get_api_v1_dispatches_all
 
+URL = "https://helldivers-2-dotnet.fly.dev/"
+HEADERS = {
+    'User-Agent': 'Helldivers-Discord-Bot',
+    'X-Application-Contact' : 'rybovic.evan@gmail.com'
+    }
 
 def GetCurrentMO() -> Assignment2:
-    client = Client(base_url="https://helldivers-2-dotnet.fly.dev/")
     CurrentMO: Assignment2
 
-    with client as client:
+    with Client(base_url=URL, headers=HEADERS) as client:
         data: Assignment2 = get_api_v1_assignments_all.sync( client=client)
 
         if data is not None:
@@ -28,7 +32,7 @@ def GetCurrentMO() -> Assignment2:
 def GetCurrentDispatch() -> Dispatch:
     dispatch: Dispatch
 
-    with Client(base_url="https://helldivers-2-dotnet.fly.dev/") as client:
+    with Client(base_url=URL, headers=HEADERS) as client:
         data = get_api_v1_dispatches_all.sync(client=client)
 
         if data is not None:

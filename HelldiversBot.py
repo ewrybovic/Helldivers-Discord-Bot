@@ -52,7 +52,7 @@ async def loop():
 
     # Check if new Major Order
     majorOrder = APIWrapper.GetCurrentMO()
-    if currentMOID != majorOrder.id:
+    if majorOrder is not None and currentMOID != majorOrder.id:
         print("New major order")
         wrapper.UpdateID(APIType.MajorOrder, majorOrder.id)
         await channel.send(HelperFunctions.format_major_order(majorOrder))
@@ -61,7 +61,7 @@ async def loop():
     
     # Check if new dispatch
     dispatch = APIWrapper.GetCurrentDispatch()
-    if currentDispatchID != dispatch.id:
+    if dispatch is not None and currentDispatchID != dispatch.id:
         print("New dispatch")
         wrapper.UpdateID(APIType.Dispatch, dispatch.id)
         await channel.send(HelperFunctions.format_dispatch(dispatch))

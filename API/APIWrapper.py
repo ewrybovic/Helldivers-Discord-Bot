@@ -17,7 +17,10 @@ def GetCurrentMO() -> Assignment2:
     with Client(base_url=URL, headers=HEADERS) as client:
         data: Assignment2 = get_api_v1_assignments_all.sync( client=client)
 
-        if data is not None:
+        if data is None:
+            return None
+
+        if len(data) > 0:
             CurrentMO = data[0]
 
             print(f'Breifing: {CurrentMO.briefing}')
@@ -36,12 +39,13 @@ def GetCurrentDispatch() -> Dispatch:
     with Client(base_url=URL, headers=HEADERS) as client:
         data = get_api_v1_dispatches_all.sync(client=client)
 
-        if data is not None:
-            for dispatch in data:
-                print(dispatch)
+        if data is None:
+            return None
 
+        if len(data) > 0:
+            for dispatch in data:
                 if dispatch.message is not None:
-                    print("good dispatch")
+                    print(dispatch.message)
                     return dispatch
         
         return None

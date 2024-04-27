@@ -46,6 +46,7 @@ async def dispatch_command(ctx):
 @tasks.loop(minutes=5)
 async def loop():
     global currentMOID
+    global currentDispatchID
 
     await bot.wait_until_ready()
     channel = bot.get_channel(CHANNEL)
@@ -54,6 +55,7 @@ async def loop():
     majorOrder = APIWrapper.GetCurrentMO()
     if majorOrder is not None and currentMOID != majorOrder.id:
         print("New major order")
+        currentMOID = majorOrder.id
         wrapper.UpdateID(APIType.MajorOrder, majorOrder.id)
         await channel.send(HelperFunctions.format_major_order(majorOrder))
     else:
@@ -63,6 +65,7 @@ async def loop():
     dispatch = APIWrapper.GetCurrentDispatch()
     if dispatch is not None and currentDispatchID != dispatch.id:
         print("New dispatch")
+        currentDispatchID = dispatch.id
         wrapper.UpdateID(APIType.Dispatch, dispatch.id)
         await channel.send(HelperFunctions.format_dispatch(dispatch))
     else:

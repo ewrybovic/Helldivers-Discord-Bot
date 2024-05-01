@@ -23,11 +23,11 @@ def GetCurrentMO() -> Assignment2:
         if len(data) > 0:
             CurrentMO = data[0]
 
-            print(f'Breifing: {CurrentMO.briefing}')
+            '''print(f'Breifing: {CurrentMO.briefing}')
             print(f'Description: {CurrentMO.description}')
             print(f'Rewards: {CurrentMO.reward.amount} {CurrentMO.reward.type}')
             print(f'Expiration: {CurrentMO.expiration}')
-            print(f'Progress: {CurrentMO.progress}')
+            print(f'Progress: {CurrentMO.progress}')'''
 
             return CurrentMO
         else:
@@ -45,7 +45,7 @@ def GetCurrentDispatch() -> Dispatch:
         if len(data) > 0:
             for dispatch in data:
                 if dispatch.message is not None:
-                    print(dispatch.message)
+                    #print(dispatch.message)
                     return dispatch
         
         return None

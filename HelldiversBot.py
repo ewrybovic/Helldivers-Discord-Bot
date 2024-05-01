@@ -70,5 +70,7 @@ async def loop():
         await channel.send(HelperFunctions.format_dispatch(dispatch))
     else:
         print("same dispatch")
+    
+    print("End Loop")
 
 bot.run(TOKEN)

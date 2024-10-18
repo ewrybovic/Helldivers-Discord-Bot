@@ -5,6 +5,7 @@ from enum import Enum
 class APIType(Enum):
     MajorOrder = 1
     Dispatch = 2
+    SteamNews = 3
 
 class DBWrapper:
     def __init__(self, db_name: str):
@@ -21,8 +22,10 @@ class DBWrapper:
         if data == []:
             print("Initializing DB")
             self.conn.execute('''CREATE TABLE HelldiverIDS(apitype INT PRIMARY KEY NOT NULL, idvalue INT NOT NULL);''')
-            self.conn.execute(f"""INSERT INTO HelldiverIDS(apitype, idvalue) VALUES ({APIType.MajorOrder.value}, 0);""")
-            self.conn.execute(f'''INSERT INTO HelldiverIDS(apitype, idvalue) VALUES ({APIType.Dispatch.value}, 0);''')
+            
+            for type in APIType:
+                self.conn.execute(f"""INSERT INTO HelldiverIDS(apitype, idvalue) VALUES ({type.value}, 0);""")
+                
             self.conn.commit()
         else:
             print("DB previously initialized")

@@ -2,8 +2,10 @@ from .helldivers_2_client import Client
 
 from .helldivers_2_client.models import Assignment2
 from .helldivers_2_client.models import Dispatch
+from .helldivers_2_client.models import SteamNews
 from .helldivers_2_client.api.v1 import get_api_v1_assignments_all
 from .helldivers_2_client.api.v1 import get_api_v1_dispatches_all
+from .helldivers_2_client.api.v1 import get_api_v1_steam
 
 URL = "https://helldivers-2-dotnet.fly.dev/"
 HEADERS = {
@@ -50,7 +52,17 @@ def GetCurrentDispatch() -> Dispatch:
         
         return None
 
+def GetCurrentSteamNews() -> SteamNews:
+    with Client(base_url=URL, headers=HEADERS) as client:
+        data = get_api_v1_steam.sync(client=client)
+
+        if data is None:
+            return None
+
+        if len(data) > 0:
+            return data[0]
     
 if __name__ == '__main__':
     #GetCurrentMO()
-    GetCurrentDispatch()
+    #GetCurrentDispatch()
+    GetCurrentSteamNews()

@@ -4,6 +4,7 @@ from API.helldivers_2_client.models import Assignment2
 from API.helldivers_2_client.models import Reward2
 from API.helldivers_2_client.models import Task2
 from API.helldivers_2_client.models import Dispatch
+from API.helldivers_2_client.models import SteamNews
 
 # Regex to remove markup tags
 CLEANR = re.compile('<.*?>')
@@ -20,6 +21,10 @@ def format_major_order(MO: Assignment2) -> str:
 def format_dispatch(dispatch: Dispatch) -> str:
     message = clean_markups(dispatch.message)
     return f'## DISPATCH\n**Published**: {format_time(dispatch.published)}\n**Message**:\n{message}'
+
+# TODO news.content has errors when writing to discord, probably because of Steams markup language. Not sure if I even want to add the content
+def format_news(news:SteamNews):
+    return f'# Steam News\n**{news.title}**\n{news.url}\n'
 
 def format_time(time) -> str:
     return time.strftime("%H:%M:%S %d-%b-%Y")

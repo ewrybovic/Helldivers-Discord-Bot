@@ -21,6 +21,7 @@ if DEBUG:
 wrapper = DBWrapper("BotDataBase.sqlite3")
 currentMOID = wrapper.GetID(APIType.MajorOrder)
 currentDispatchID = wrapper.GetID(APIType.Dispatch)
+currentSteamNewsID = wrapper.GetID(APIType.SteamNews)
 
 # Create the intents for the bot
 intents = discord.Intents.default()
@@ -43,10 +44,16 @@ async def dispatch_command(ctx):
     dispatch = APIWrapper.GetCurrentDispatch()
     await ctx.send(HelperFunctions.format_dispatch(dispatch))
 
+@bot.command(name="Steam", help="Gets the most recent steam news")
+async def dispatch_command(ctx):
+    news = APIWrapper.GetCurrentSteamNews()
+    await ctx.send(HelperFunctions.format_news(news))
+
 @tasks.loop(minutes=5)
 async def loop():
     global currentMOID
     global currentDispatchID
+    global currentSteamNewsID
 
     await bot.wait_until_ready()
     channel = bot.get_channel(CHANNEL)
@@ -70,5 +77,18 @@ async def loop():
         await channel.send(HelperFunctions.format_dispatch(dispatch))
     else:
         print("same dispatch")
+
+    # Check Steam News
+    news = APIWrapper.GetCurrentSteamNews()
+    if news is not None and currentSteamNewsID != int(news.id): # news.id is str and not int
+        print("New Steam News")
+        news_id = int(news.id)
+        currentSteamNewsID = news_id
+        wrapper.UpdateID(APIType.SteamNews, news_id)
+        await channel.send(HelperFunctions.format_news(news))
+    else:
+        print("Same Steam News")
+    
+    print("End Loop")
 
 bot.run(TOKEN)

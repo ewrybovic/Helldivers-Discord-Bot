@@ -22,10 +22,6 @@ class DBWrapper:
         if data == []:
             print("Initializing DB")
             self.conn.execute('''CREATE TABLE HelldiverIDS(apitype INT PRIMARY KEY NOT NULL, idvalue INT NOT NULL);''')
-            
-            for type in APIType:
-                self.conn.execute(f"""INSERT INTO HelldiverIDS(apitype, idvalue) VALUES ({type.value}, 0);""")
-                
             self.conn.commit()
         else:
             print("DB previously initialized")
@@ -37,13 +33,14 @@ class DBWrapper:
     def UpdateID(self, type: APIType, id: int):
         print(f'Updating {type.name}')
         self.conn.execute(
-            f"""UPDATE HelldiverIDS SET idvalue = {id} WHERE apitype = {type.value}"""
-        )
+            f"""REPLACE INTO HelldiverIDS (apitype, idvalue) VALUES ({type.value}, {id})"""
+        ) # Hacky way to insert/update at the same time, kinda nasty
         self.conn.commit()
 
     def GetID(self, type:APIType) -> int:
         print(f"Getting value for {type.name}")
-        return self.conn.execute(f"""SELECT idvalue FROM HelldiverIDS WHERE apitype = {type.value}""").fetchone()[0]
+        data = self.conn.execute(f"""SELECT idvalue FROM HelldiverIDS WHERE apitype = {type.value}""").fetchone()
+        return -1 if data is None else data[0]
 
     def close(self):
         self.conn.close()
